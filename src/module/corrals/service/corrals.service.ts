@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -52,6 +53,21 @@ export class CorralService {
       console.error('Error getting corrals:', error.message);
       throw new InternalServerErrorException(
         'The corral could not be created. Please try again later.',
+      );
+    }
+  }
+
+  async findById(id: string): Promise<Corral> {
+    try {
+      const corral = await this.corralModel.findById(id).exec();
+      if (!corral) {
+        throw new NotFoundException('Corral not found');
+      }
+      return corral;
+    } catch (error) {
+      console.error('Error finding corral by ID:', error.message);
+      throw new InternalServerErrorException(
+        'Error retrieving corral. Please try again later.',
       );
     }
   }

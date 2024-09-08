@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { CreateCorralDto } from '../dtos';
 import { CorralService } from '../service/corrals.service';
 import { Corral } from '../entities/corral.entity';
@@ -6,6 +6,7 @@ import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -47,5 +48,22 @@ export class CorralController {
   })
   async findAll(): Promise<Corral[]> {
     return this.corralService.findAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Retrieve a corral by its ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved the corral.',
+    type: Corral,
+  })
+  @ApiNotFoundResponse({
+    description: 'Corral not found.',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Server error retrieving corral.',
+  })
+  async findById(@Param('id') id: string): Promise<Corral> {
+    return this.corralService.findById(id);
   }
 }
