@@ -31,4 +31,17 @@ export class AnimalService {
       );
     }
   }
+
+  async findAll(): Promise<Animal[]> {
+    try {
+      return await this.animalModel.find().exec();
+    } catch (error) {
+      console.error('Error getting animals:', error.message);
+      throw new InternalServerErrorException(
+        'Error retrieving animals. Please try again later.',
+      );
+    }
+  }
+
+  
 }

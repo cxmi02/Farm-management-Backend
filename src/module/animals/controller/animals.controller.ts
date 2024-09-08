@@ -1,9 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Animal } from '../entities/animals.entity.dto';
@@ -31,5 +32,19 @@ export class AnimalController {
     @Body() createAnimalDto: CreateAnimalDto,
   ): Promise<Animal> {
     return this.animalService.create(createAnimalDto);
+  }
+
+  @Get('findAll')
+  @ApiOperation({ summary: 'Get all animals' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all animals',
+    type: [Animal],
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Error retrieving animals',
+  })
+  async findAll(): Promise<Animal[]> {
+    return this.animalService.findAll();
   }
 }
