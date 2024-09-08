@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import dbConfig from './persistence/db-config';
 import { PersistenceModule } from './persistence';
 import { CorralsModule } from './module/corrals/corrals.module';
+import { AnimalsModule } from './module/animals/animals.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CorralsModule } from './module/corrals/corrals.module';
     }),
     PersistenceModule,
     CorralsModule,
+    AnimalsModule,
   ],
   controllers: [],
   providers: [],
