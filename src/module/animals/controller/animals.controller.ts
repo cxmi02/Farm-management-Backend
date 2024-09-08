@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -10,7 +10,7 @@ import {
 } from '@nestjs/swagger';
 import { Animal } from '../entities/animals.entity.dto';
 import { AnimalService } from '../service/animals.service';
-import { CreateAnimalDto } from '../dtos';
+import { CreateAnimalDto, UpdateAnimalDto } from '../dtos';
 
 @ApiTags('Animals')
 @Controller('animals')
@@ -64,5 +64,28 @@ export class AnimalController {
   })
   async findById(@Param('id') id: string): Promise<Animal> {
     return this.animalService.findById(id);
+  }
+
+  @Put('update/:id')
+  @ApiOperation({ summary: 'Update an animal by its ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The animal has been successfully updated.',
+    type: Animal,
+  })
+  @ApiNotFoundResponse({
+    description: 'Animal not found.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid ID format or validation error.',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Server error updating animal.',
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() updateAnimalDto: UpdateAnimalDto,
+  ): Promise<Animal> {
+    return this.animalService.update(id, updateAnimalDto);
   }
 }
