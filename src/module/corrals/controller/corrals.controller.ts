@@ -116,4 +116,36 @@ export class CorralController {
     const result = await this.corralService.delete(id);
     return { message: result };
   }
+
+  @Get('animalSummary')
+  @ApiOperation({ summary: 'Get a summary of animals grouped by corral' })
+  @ApiResponse({
+    status: 200,
+    description: 'Summary of animals grouped by corral',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Error retrieving animal summary.',
+  })
+  async getAnimalSummary(): Promise<any> {
+    return this.corralService.getAnimalSummary();
+  }
+
+  @Get('animalAge/:id')
+  @ApiOperation({ summary: 'Get the average age of animals in a corral' })
+  @ApiResponse({
+    status: 200,
+    description: 'The average age of animals in the corral',
+    type: Number,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Corral not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  async getAverageAnimalAge(@Param('id') id: string): Promise<number> {
+    return this.corralService.getAverageAnimalAge(id);
+  }
 }
