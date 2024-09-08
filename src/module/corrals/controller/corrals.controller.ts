@@ -1,5 +1,5 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
-import { CreateCorralDto } from '../dtos';
+import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
+import { CreateCorralDto, UpdateCorralDto } from '../dtos';
 import { CorralService } from '../service/corrals.service';
 import { Corral } from '../entities/corral.entity';
 import {
@@ -50,7 +50,7 @@ export class CorralController {
     return this.corralService.findAll();
   }
 
-  @Get(':id')
+  @Get('getById/:id')
   @ApiOperation({ summary: 'Retrieve a corral by its ID' })
   @ApiResponse({
     status: 200,
@@ -65,5 +65,28 @@ export class CorralController {
   })
   async findById(@Param('id') id: string): Promise<Corral> {
     return this.corralService.findById(id);
+  }
+
+  @Put('update/:id')
+  @ApiOperation({ summary: 'Update a corral by its ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The corral has been successfully updated.',
+    type: Corral,
+  })
+  @ApiNotFoundResponse({
+    description: 'Corral not found.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Validation error or incorrect parameters.',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Server error updating corral.',
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() updateCorralDto: UpdateCorralDto,
+  ): Promise<Corral> {
+    return this.corralService.update(id, updateCorralDto);
   }
 }

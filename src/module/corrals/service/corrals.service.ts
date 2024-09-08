@@ -7,7 +7,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Corral } from '../entities/corral.entity';
-import { CreateCorralDto } from '../dtos';
+import { CreateCorralDto, UpdateCorralDto } from '../dtos';
 
 @Injectable()
 export class CorralService {
@@ -68,6 +68,23 @@ export class CorralService {
       console.error('Error finding corral by ID:', error.message);
       throw new InternalServerErrorException(
         'Error retrieving corral. Please try again later.',
+      );
+    }
+  }
+
+  async update(id: string, updateCorralDto: UpdateCorralDto): Promise<Corral> {
+    try {
+      const updatedCorral = await this.corralModel
+        .findByIdAndUpdate(id, updateCorralDto, { new: true })
+        .exec();
+      if (!updatedCorral) {
+        throw new NotFoundException('Corral not found');
+      }
+      return updatedCorral;
+    } catch (error) {
+      console.error('Error updating corral:', error.message);
+      throw new InternalServerErrorException(
+        'Error updating corral. Please try again later.',
       );
     }
   }
