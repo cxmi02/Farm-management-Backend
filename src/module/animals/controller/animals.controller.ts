@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -87,5 +95,25 @@ export class AnimalController {
     @Body() updateAnimalDto: UpdateAnimalDto,
   ): Promise<Animal> {
     return this.animalService.update(id, updateAnimalDto);
+  }
+
+  @Delete('delete/:id')
+  @ApiOperation({ summary: 'Delete an animal by its ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The animal has been successfully deleted.',
+  })
+  @ApiNotFoundResponse({
+    description: 'Animal not found.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid ID format.',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Server error deleting animal.',
+  })
+  async delete(@Param('id') id: string): Promise<{ message: string }> {
+    const result = await this.animalService.delete(id);
+    return { message: result };
   }
 }

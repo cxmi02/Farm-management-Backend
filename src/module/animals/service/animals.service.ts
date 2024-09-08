@@ -85,4 +85,23 @@ export class AnimalService {
       );
     }
   }
+
+  async delete(id: string): Promise<string> {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Invalid ID format');
+    }
+
+    try {
+      const result = await this.animalModel.findByIdAndDelete(id).exec();
+      if (!result) {
+        throw new NotFoundException('Animal not found');
+      }
+      return 'Animal successfully deleted';
+    } catch (error) {
+      console.error('Error deleting animal:', error.message);
+      throw new InternalServerErrorException(
+        'Error deleting animal. Please try again later.',
+      );
+    }
+  }
 }
