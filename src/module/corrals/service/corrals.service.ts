@@ -1,0 +1,119 @@
+import {
+  Injectable,
+  InternalServerErrorException,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { isValidObjectId, Model } from 'mongoose';
+import { Corral } from '../entities/corral.entity';
+import { CreateCorralDto, UpdateCorralDto } from '../dtos';
+
+@Injectable()
+export class CorralService {
+  constructor(
+    @InjectModel(Corral.name) private readonly corralModel: Model<Corral>,
+  ) {}
+
+  private validateCapacity(capacity: number): void {
+    if (capacity < 1 || capacity > 50) {
+      throw new BadRequestException('The capacity must be between 1 and 50.');
+    }
+  }
+
+  async create(createCorralDto: CreateCorralDto): Promise<Corral> {
+    try {
+      const { name, capacity, animals } = createCorralDto;
+
+      this.validateCapacity(capacity);
+
+      const newCorral = new this.corralModel({
+        name,
+        capacity,
+        animals: animals || [],
+      });
+
+      return await newCorral.save();
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      console.error('Error creating corral:', error.message);
+
+      throw new InternalServerErrorException(
+        'The corral could not be created. Please try again later.',
+      );
+    }
+  }
+  async findAll(): Promise<Corral[]> {
+    try {
+      return await this.corralModel.find().exec();
+    } catch (error) {
+      console.error('Error getting corrals:', error.message);
+      throw new InternalServerErrorException(
+        'The retrieving corrals. Please try again later.',
+      );
+    }
+  }
+
+  async findById(id: string): Promise<Corral> {
+    try {
+      if (!isValidObjectId(id)) {
+        throw new BadRequestException('Invalid ID format');
+      }
+      const corral = await this.corralModel.findById(id).exec();
+      if (!corral) {
+        throw new NotFoundException('Corral not found');
+      }
+      return corral;
+    } catch (error) {
+      console.error('Error finding corral by ID:', error.message);
+      throw new InternalServerErrorException(
+        'Error retrieving corral. Please try again later.',
+      );
+    }
+  }
+
+  async update(id: string, updateCorralDto: UpdateCorralDto): Promise<Corral> {
+    try {
+      if (!isValidObjectId(id)) {
+        throw new BadRequestException('Invalid ID format');
+      }
+      const updatedCorral = await this.corralModel
+        .findByIdAndUpdate(id, updateCorralDto, {
+          new: true,
+          runValidators: true,
+        })
+        .exec();
+      if (!updatedCorral) {
+        throw new NotFoundException('Corral not found');
+      }
+      return updatedCorral;
+    } catch (error) {
+      console.error('Error updating corral:', error.message);
+      throw new InternalServerErrorException(
+        'Error updating corral. Please try again later.',
+      );
+    }
+  }
+
+  async delete(id: string): Promise<string> {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Invalid ID format');
+    }
+
+    try {
+      const result = await this.corralModel.findByIdAndDelete(id).exec();
+      if (!result) {
+        throw new NotFoundException('Corral not found');
+      }
+      return 'Corral successfully deleted';
+    } catch (error) {
+      console.error('Error deleting corral:', error.message);
+      throw new InternalServerErrorException(
+        'Error deleting corral. Please try again later.',
+      );
+    }
+  }
+}
