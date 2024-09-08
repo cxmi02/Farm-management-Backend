@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   IsNumber,
   IsArray,
-  /*   ArrayNotEmpty, */
   Max,
   Min,
 } from 'class-validator';
@@ -36,5 +35,5 @@ export class CreateCorralDto {
   })
   @IsArray()
   @IsString({ each: true })
-  animalIds: string[];
+  animals: string[];
 }
