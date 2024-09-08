@@ -123,4 +123,35 @@ export class CorralService {
       );
     }
   }
+
+  async getAverageAnimalAge(corralId: string): Promise<number> {
+    try {
+      // Buscar el corral por ID y poblar los animales
+      const corral = await this.corralModel
+        .findById(corralId)
+        .populate<{ animals: Animal[] }>('animals')
+        .exec();
+
+      if (!corral) {
+        throw new NotFoundException('Corral not found');
+      }
+
+      // Obtener los animales del corral
+      const animals = corral.animals;
+
+      // Calcular el promedio de edad
+      const totalAge = animals.reduce(
+        (sum, animal) => sum + (animal.age || 0),
+        0,
+      );
+      const averageAge = animals.length > 0 ? totalAge / animals.length : 0;
+
+      return averageAge;
+    } catch (error) {
+      console.error('Error getting average animal age:', error.message);
+      throw new InternalServerErrorException(
+        'Error calculating average animal age',
+      );
+    }
+  }
 }

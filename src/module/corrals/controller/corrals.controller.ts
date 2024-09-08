@@ -129,4 +129,23 @@ export class CorralController {
   async getAnimalSummary(): Promise<any> {
     return this.corralService.getAnimalSummary();
   }
+
+  @Get('animalAge/:id')
+  @ApiOperation({ summary: 'Get the average age of animals in a corral' })
+  @ApiResponse({
+    status: 200,
+    description: 'The average age of animals in the corral',
+    type: Number,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Corral not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  async getAverageAnimalAge(@Param('id') id: string): Promise<number> {
+    return this.corralService.getAverageAnimalAge(id);
+  }
 }
