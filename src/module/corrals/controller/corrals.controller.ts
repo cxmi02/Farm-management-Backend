@@ -1,10 +1,11 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { CreateCorralDto } from '../dtos';
 import { CorralService } from '../service/corrals.service';
 import { Corral } from '../entities/corral.entity';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -32,5 +33,19 @@ export class CorralController {
     @Body() createCorralDto: CreateCorralDto,
   ): Promise<Corral> {
     return this.corralService.create(createCorralDto);
+  }
+
+  @Get('findAll')
+  @ApiOperation({ summary: 'Get all the corrals' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all corrals',
+    type: [Corral],
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Error getting pens',
+  })
+  async findAll(): Promise<Corral[]> {
+    return this.corralService.findAll();
   }
 }

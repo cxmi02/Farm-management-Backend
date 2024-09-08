@@ -45,4 +45,14 @@ export class CorralService {
       );
     }
   }
+  async findAll(): Promise<Corral[]> {
+    try {
+      return await this.corralModel.find().exec();
+    } catch (error) {
+      console.error('Error getting corrals:', error.message);
+      throw new InternalServerErrorException(
+        'The corral could not be created. Please try again later.',
+      );
+    }
+  }
 }

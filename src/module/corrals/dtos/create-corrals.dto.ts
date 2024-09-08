@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   IsNumber,
   IsArray,
-  /*   ArrayNotEmpty, */
   Max,
   Min,
 } from 'class-validator';
