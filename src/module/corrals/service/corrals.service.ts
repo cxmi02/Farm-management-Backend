@@ -17,7 +17,7 @@ export class CorralService {
 
   private validateCapacity(capacity: number): void {
     if (capacity < 1 || capacity > 50) {
-      throw new BadRequestException('The capacity must be between 1 and 50..');
+      throw new BadRequestException('The capacity must be between 1 and 50.');
     }
   }
 
@@ -52,13 +52,16 @@ export class CorralService {
     } catch (error) {
       console.error('Error getting corrals:', error.message);
       throw new InternalServerErrorException(
-        'The corral could not be created. Please try again later.',
+        'The retrieving corrals. Please try again later.',
       );
     }
   }
 
   async findById(id: string): Promise<Corral> {
     try {
+      if (!isValidObjectId(id)) {
+        throw new BadRequestException('Invalid ID format');
+      }
       const corral = await this.corralModel.findById(id).exec();
       if (!corral) {
         throw new NotFoundException('Corral not found');
@@ -74,8 +77,14 @@ export class CorralService {
 
   async update(id: string, updateCorralDto: UpdateCorralDto): Promise<Corral> {
     try {
+      if (!isValidObjectId(id)) {
+        throw new BadRequestException('Invalid ID format');
+      }
       const updatedCorral = await this.corralModel
-        .findByIdAndUpdate(id, updateCorralDto, { new: true })
+        .findByIdAndUpdate(id, updateCorralDto, {
+          new: true,
+          runValidators: true,
+        })
         .exec();
       if (!updatedCorral) {
         throw new NotFoundException('Corral not found');

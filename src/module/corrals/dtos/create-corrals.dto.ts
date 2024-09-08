@@ -6,6 +6,7 @@ import {
   IsArray,
   Max,
   Min,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateCorralDto {
@@ -29,11 +30,12 @@ export class CreateCorralDto {
   capacity: number;
 
   @ApiProperty({
-    description: 'Array of animal IDs to be assigned to this corral.',
-    example: ['animal1', 'animal2'],
+    description: 'List of animal IDs associated with the corral',
+    type: [String],
     required: false,
   })
+  @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  animals: string[];
+  readonly animals?: string[];
 }

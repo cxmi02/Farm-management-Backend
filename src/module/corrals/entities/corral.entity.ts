@@ -9,8 +9,11 @@ export class Corral extends Document {
   @Prop({ required: true, min: 1, max: 50 })
   capacity: number;
 
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Animal' }] })
-  animals: string[];
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Animal' }],
+    default: [],
+  })
+  animals: MongooseSchema.Types.ObjectId[];
 }
 
 export const CorralSchema = SchemaFactory.createForClass(Corral);

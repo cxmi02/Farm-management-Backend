@@ -34,8 +34,7 @@ export class CorralController {
   @ApiBadRequestResponse({
     description: 'Validation error or incorrect parameters.',
   })
-  @ApiResponse({
-    status: 500,
+  @ApiInternalServerErrorResponse({
     description: 'Server error creating corral.',
   })
   async createCorral(
@@ -52,7 +51,7 @@ export class CorralController {
     type: [Corral],
   })
   @ApiInternalServerErrorResponse({
-    description: 'Error getting pens',
+    description: 'Server error retrieving corrals.',
   })
   async findAll(): Promise<Corral[]> {
     return this.corralService.findAll();
