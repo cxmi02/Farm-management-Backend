@@ -1,8 +1,9 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -46,5 +47,22 @@ export class AnimalController {
   })
   async findAll(): Promise<Animal[]> {
     return this.animalService.findAll();
+  }
+
+  @Get('findById/:id')
+  @ApiOperation({ summary: 'Retrieve an animal by its ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved the animal.',
+    type: Animal,
+  })
+  @ApiNotFoundResponse({
+    description: 'Animal not found.',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Server error retrieving animal.',
+  })
+  async findById(@Param('id') id: string): Promise<Animal> {
+    return this.animalService.findById(id);
   }
 }

@@ -1,6 +1,10 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { Animal } from '../entities/animals.entity.dto';
 import { CreateAnimalDto } from '../dtos';
 
@@ -43,5 +47,21 @@ export class AnimalService {
     }
   }
 
-  
+  async findById(id: string): Promise<Animal> {
+    if (!isValidObjectId(id)) {
+      throw new NotFoundException('Invalid ID format');
+    }
+    try {
+      const animal = await this.animalModel.findById(id).exec();
+      if (!animal) {
+        throw new NotFoundException('Animal not found');
+      }
+      return animal;
+    } catch (error) {
+      console.error('Error finding animal by ID:', error.message);
+      throw new InternalServerErrorException(
+        'Error retrieving animal. Please try again later.',
+      );
+    }
+  }
 }
