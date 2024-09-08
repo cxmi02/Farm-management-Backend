@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsNumber, IsArray, ArrayNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  IsArray,
+  /*   ArrayNotEmpty, */
+  Max,
+  Min,
+} from 'class-validator';
 
 export class CreateCorralDto {
   @ApiProperty({
@@ -11,9 +19,12 @@ export class CreateCorralDto {
   name: string;
 
   @ApiProperty({
-    description: 'The maximum capacity of the corral in terms of number of animals.',
+    description:
+      'The maximum capacity of the corral in terms of number of animals.',
     example: 10,
   })
+  @Min(0, { message: 'La capacidad mínima es 0.' })
+  @Max(50, { message: 'La capacidad máxima es 50.' })
   @IsNumber()
   @IsNotEmpty()
   capacity: number;
@@ -24,6 +35,6 @@ export class CreateCorralDto {
     required: false,
   })
   @IsArray()
-  @ArrayNotEmpty()
-  animals: string[];
+  @IsString({ each: true })
+  animalIds: string[];
 }

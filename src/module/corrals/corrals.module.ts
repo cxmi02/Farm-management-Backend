@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { CorralsService } from './service/corrals.service';
-import { CorralsController } from './controller/corrals.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Corral, CorralSchema } from './entities/corral.entity';
+import { CorralService } from './service/corrals.service';
+import { CorralController } from './controller/corrals.controller';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Corral.name, schema: CorralSchema }]),
   ],
-  providers: [CorralsService],
-  controllers: [CorralsController]
+  providers: [CorralService],
+  controllers: [CorralController],
 })
 export class CorralsModule {}

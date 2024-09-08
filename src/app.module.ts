@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import dbConfig from './persistence/db-config';
 import { PersistenceModule } from './persistence';
+import { CorralsModule } from './module/corrals/corrals.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { PersistenceModule } from './persistence';
       isGlobal: true,
     }),
     PersistenceModule,
+    CorralsModule,
   ],
   controllers: [],
   providers: [],
