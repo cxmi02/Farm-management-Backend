@@ -116,4 +116,17 @@ export class CorralController {
     const result = await this.corralService.delete(id);
     return { message: result };
   }
+
+  @Get('animalSummary')
+  @ApiOperation({ summary: 'Get a summary of animals grouped by corral' })
+  @ApiResponse({
+    status: 200,
+    description: 'Summary of animals grouped by corral',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Error retrieving animal summary.',
+  })
+  async getAnimalSummary(): Promise<any> {
+    return this.corralService.getAnimalSummary();
+  }
 }

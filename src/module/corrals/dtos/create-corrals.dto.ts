@@ -23,8 +23,8 @@ export class CreateCorralDto {
       'The maximum capacity of the corral in terms of number of animals.',
     example: 10,
   })
-  @Min(0, { message: 'La capacidad mínima es 0.' })
-  @Max(50, { message: 'La capacidad máxima es 50.' })
+  @Min(1, { message: 'The minimum capacity is 1.' })
+  @Max(50, { message: 'The maximum capacity is 50.' })
   @IsNumber()
   @IsNotEmpty()
   capacity: number;

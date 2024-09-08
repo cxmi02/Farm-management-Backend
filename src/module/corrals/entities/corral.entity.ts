@@ -1,5 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Animal } from '../../animals/entities/animals.entity.dto';
 
 @Schema({ timestamps: true })
 export class Corral extends Document {
@@ -10,7 +11,7 @@ export class Corral extends Document {
   capacity: number;
 
   @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Animal' }],
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: Animal.name }],
     default: [],
   })
   animals: MongooseSchema.Types.ObjectId[];
