@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { Corral } from '../entities/corral.entity';
 import { CreateCorralDto, UpdateCorralDto } from '../dtos';
 
@@ -85,6 +85,25 @@ export class CorralService {
       console.error('Error updating corral:', error.message);
       throw new InternalServerErrorException(
         'Error updating corral. Please try again later.',
+      );
+    }
+  }
+
+  async delete(id: string): Promise<string> {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Invalid ID format');
+    }
+
+    try {
+      const result = await this.corralModel.findByIdAndDelete(id).exec();
+      if (!result) {
+        throw new NotFoundException('Corral not found');
+      }
+      return 'Corral successfully deleted';
+    } catch (error) {
+      console.error('Error deleting corral:', error.message);
+      throw new InternalServerErrorException(
+        'Error deleting corral. Please try again later.',
       );
     }
   }

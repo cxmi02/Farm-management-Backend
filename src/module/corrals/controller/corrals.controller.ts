@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { CreateCorralDto, UpdateCorralDto } from '../dtos';
 import { CorralService } from '../service/corrals.service';
 import { Corral } from '../entities/corral.entity';
@@ -88,5 +96,25 @@ export class CorralController {
     @Body() updateCorralDto: UpdateCorralDto,
   ): Promise<Corral> {
     return this.corralService.update(id, updateCorralDto);
+  }
+
+  @Delete('delete/:id')
+  @ApiOperation({ summary: 'Delete a corral by its ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The corral has been successfully deleted.',
+  })
+  @ApiNotFoundResponse({
+    description: 'Corral not found.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid ID format.',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Server error deleting corral.',
+  })
+  async delete(@Param('id') id: string): Promise<{ message: string }> {
+    const result = await this.corralService.delete(id);
+    return { message: result };
   }
 }
