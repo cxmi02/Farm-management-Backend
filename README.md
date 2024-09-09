@@ -4,7 +4,7 @@ The "Animals and Corrals" system is designed to manage detailed information abou
 
 ## Content Table
 
-- [**Microservices Farm Management**](#microservices-farm-management)
+  - [**Microservices Farm Management**](#microservices-farm-management)
   - [Content Table](#content-table)
   - [Functionalities](#functionalities)
   - [Project Configuration](#project-configuration)
